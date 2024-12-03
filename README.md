@@ -3,7 +3,15 @@ Relates to [added gemini exp 1121 to api.ts #851](https://github.com/cline/cline
 ---
 # cline-gemini-exp-1121-space-invaders
 
-feat: make space invaders and publish it
+---
+
+My custom instrucions are at https://github.com/lloydchang/cline-gemini-exp-1121-space-invaders/blob/main/CLINE.md
+
+---
+
+My subsequent instruction to Cline is:
+
+> make space invaders and publish it
 
 ---
 

@@ -38,3 +38,7 @@ I was able to use that https://github.com/cline/cline/pull/851 pull request to m
 Its logic only seems to load the main page.
 
 More iterations would be needed via additional Cline steps.
+
+---
+
+Subsequently, I'm amending https://github.com/lloydchang/aider-cline-gemini-exp-1121-space-invaders with Aider

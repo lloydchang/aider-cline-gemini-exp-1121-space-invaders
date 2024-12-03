@@ -1,12 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Check if canvas context is valid
-if (!ctx) {
-    console.error("Error: Could not get 2D rendering context. Check your canvas element.");
-    throw new Error("Canvas context is invalid.");
-}
-
 // Player
 class Player {
     constructor(x, y, width, height, dx, color) {
@@ -24,9 +18,9 @@ class Player {
     }
 
     update() {
-        if (rightPressed && this.x < canvas.width - this.width) {
+        if (rightPressed &amp;&amp; this.x < canvas.width - this.width) {
             this.x += this.dx;
-        } else if (leftPressed && this.x > 0) {
+        } else if (leftPressed &amp;&amp; this.x > 0) {
             this.x -= this.dx;
         }
     }
@@ -136,6 +130,12 @@ let score = 0;
 let gameOver = false;
 let gameStarted = false;
 
+// AI: Add a check to ensure canvas context is valid before proceeding.
+// AI: Add comprehensive error handling for all potential issues.
+// AI: Implement a more efficient collision detection algorithm.
+// AI: Optimize the game loop for better performance.
+// AI: Consider using a game engine or framework for better structure and maintainability.
+// AI!
 
 // Event listeners
 document.addEventListener('keydown', keyDownHandler);
@@ -269,7 +269,7 @@ function gameLoop() {
         createProjectile();
 
         // Power-up logic
-        if (powerUpActive &amp;&amp; powerUp) { //Check if powerUp exists
+        if (powerUpActive) {
             powerUp.draw();
 
             if (

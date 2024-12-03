@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    overflow: hidden; /* Hide scrollbars */
+    background-color: #000; /* Black background */
+}
+
+#gameCanvas {
+    background-color: #000; /* Black canvas */
+    display: block; /* Prevent space below canvas */
+    margin: 20px auto; /* Center the canvas */
+}

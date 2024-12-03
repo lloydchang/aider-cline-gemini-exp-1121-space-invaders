@@ -1,18 +1,53 @@
-// AI Refactor the code to use classes for game objects (player, invaders, projectiles).
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 // Player
-const player = {
-    x: canvas.width / 2 - 30,
-    y: canvas.height - 60,
-    width: 60,
-    height: 30,
-    dx: 5, // Movement speed
-    color: 'white'
-};
+class Player {
+    constructor(x, y, width, height, dx, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.dx = dx;
+        this.color = color;
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    update() {
+        if (rightPressed && this.x < canvas.width - this.width) {
+            this.x += this.dx;
+        } else if (leftPressed && this.x > 0) {
+            this.x -= this.dx;
+        }
+    }
+}
+
+const player = new Player(canvas.width / 2 - 30, canvas.height - 60, 60, 30, 5, 'white');
 
 // Invaders -  Added invaderSpeed and direction
+class Invader {
+    constructor(x, y, width, height, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    update(invaderSpeed) {
+        this.x += invaderSpeed;
+    }
+}
+
 const invaders = [];
 const invaderRows = 5;
 const invaderCols = 10;
@@ -37,6 +72,24 @@ for (let row = 0; row < invaderRows; row++) {
 }
 
 // Projectiles
+class Projectile {
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    draw() {
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    update() {
+        this.y -= projectileSpeed;
+    }
+}
+
 const projectiles = [];
 const projectileWidth = 5;
 const projectileHeight = 15;
@@ -75,24 +128,8 @@ function keyUpHandler(e) {
 }
 
 // Draw functions
-function drawPlayer() {
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-}
 
-function drawInvaders() {
-    invaders.forEach(invader => {
-        ctx.fillStyle = invader.color;
-        ctx.fillRect(invader.x, invader.y, invader.width, invader.height);
-    });
-}
 
-function drawProjectiles() {
-    projectiles.forEach(projectile => {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(projectile.x, projectile.y, projectile.width, projectile.height);
-    });
-}
 
 function drawScore() {
     ctx.font = '20px Arial';
@@ -107,81 +144,6 @@ function drawGameOver() {
 }
 
 // Update functions
-function updatePlayer() {
-    if (rightPressed && player.x < canvas.width - player.width) {
-        player.x += player.dx;
-    } else if (leftPressed && player.x > 0) {
-        player.x -= player.dx;
-    }
-}
-
-function updateInvaders() {
-    // Move invaders horizontally
-    invaders.forEach(invader => {
-        invader.x += invaderSpeed;
-    });
-
-    // Check for collisions with walls
-    let rightmostInvader = invaders[invaders.length -1];
-    let leftmostInvader = invaders[0];
-    invaders.forEach(invader => {
-        if (rightmostInvader.x + rightmostInvader.width > canvas.width) invaderSpeed = -invaderSpeed;
-        if (leftmostInvader.x < 0) invaderSpeed = -invaderSpeed;
-    });
-
-    // Move invaders down if they hit the wall
-    if (invaderSpeed < 0 && leftmostInvader.x < 0 || invaderSpeed > 0 && rightmostInvader.x + rightmostInvader.width > canvas.width) {
-        invaders.forEach(invader => invader.y += invaderHeight);
-        invaderSpeed *= -1; // Reverse direction
-    }
-
-    // Check for collisions with player
-    invaders.forEach(invader => {
-        if (
-            !gameOver &&
-            player.x < invader.x + invader.width &&
-            player.x + player.width > invader.x &&
-            player.y < invader.y + invader.height &&
-            player.y + player.height > invader.y
-        ) {
-            gameOver = true;
-        }
-    });
-
-    // Check if any invaders reached the bottom
-    if (invaders.some(invader => invader.y + invader.height > canvas.height)) {
-        gameOver = true;
-    }
-
-    if (invaders.length === 0) gameOver = true; //Win condition
-}
-
-function updateProjectiles() {
-    // Move projectiles
-    projectiles.forEach(projectile => {
-        projectile.y -= projectileSpeed;
-    });
-
-    // Remove projectiles that go off-screen
-    projectiles = projectiles.filter(projectile => projectile.y > 0);
-
-    // Check for collisions with invaders
-    projectiles.forEach(projectile => {
-        invaders.forEach((invader, index) => {
-            if (
-                projectile.x < invader.x + invader.width &&
-                projectile.x + projectile.width > invader.x &&
-                projectile.y < invader.y + invader.height &&
-                projectile.y + projectile.height > invader.y
-            ) {
-                invaders.splice(index, 1); // Remove invader
-                projectiles.splice(projectiles.indexOf(projectile), 1); // Remove projectile
-                score++;
-                invaderSpeed += 0.05 * Math.sign(invaderSpeed); // Increase speed in current direction
-            }
-        });
-    });
-}
 
 function createProjectile() {
     if (spacePressed) {
@@ -200,15 +162,77 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
     if (!gameOver) {
         if (!gameStarted) { gameStarted = true; return; } // Prevent immediate game over
-        drawPlayer();
-        drawInvaders();
-        drawProjectiles();
+        player.draw();
+        invaders.forEach(invader => invader.draw());
+        projectiles.forEach(projectile => projectile.draw());
         drawScore();
 
-        updatePlayer();
-        if (invaders.length > 0)
-        updateInvaders();
-        updateProjectiles();
+        player.update();
+
+        // Move invaders horizontally
+        invaders.forEach(invader => {
+            invader.update(invaderSpeed);
+        });
+
+        // Check for collisions with walls
+        let rightmostInvader = invaders[invaders.length - 1];
+        let leftmostInvader = invaders[0];
+
+        if (rightmostInvader && rightmostInvader.x + rightmostInvader.width > canvas.width) {
+            invaderSpeed = -invaderSpeed;
+            invaders.forEach(invader => invader.y += invaderHeight);
+        }
+
+        if (leftmostInvader && leftmostInvader.x < 0) {
+            invaderSpeed = -invaderSpeed;
+            invaders.forEach(invader => invader.y += invaderHeight);
+        }
+
+        // Check for collisions with player
+        invaders.forEach(invader => {
+            if (
+                !gameOver &&
+                player.x < invader.x + invader.width &&
+                player.x + player.width > invader.x &&
+                player.y < invader.y + invader.height &&
+                player.y + player.height > invader.y
+            ) {
+                gameOver = true;
+            }
+        });
+
+        // Check if any invaders reached the bottom
+        if (invaders.some(invader => invader.y + invader.height > canvas.height)) {
+            gameOver = true;
+        }
+
+        if (invaders.length === 0) gameOver = true; //Win condition
+
+        // Move projectiles
+        projectiles.forEach(projectile => {
+            projectile.update();
+        });
+
+        // Remove projectiles that go off-screen
+        projectiles = projectiles.filter(projectile => projectile.y > 0);
+
+        // Check for collisions with invaders
+        projectiles.forEach(projectile => {
+            invaders.forEach((invader, index) => {
+                if (
+                    projectile.x < invader.x + invader.width &&
+                    projectile.x + projectile.width > invader.x &&
+                    projectile.y < invader.y + invader.height &&
+                    projectile.y + projectile.height > invader.y
+                ) {
+                    invaders.splice(index, 1); // Remove invader
+                    projectiles.splice(projectiles.indexOf(projectile), 1); // Remove projectile
+                    score++;
+                    invaderSpeed += 0.05 * Math.sign(invaderSpeed); // Increase speed in current direction
+                }
+            });
+        });
+
         createProjectile();
 
         requestAnimationFrame(gameLoop);
@@ -218,4 +242,3 @@ function gameLoop() {
 }
 
 gameLoop();
-// AI!

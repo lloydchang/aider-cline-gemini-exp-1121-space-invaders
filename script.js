@@ -11,7 +11,7 @@ const player = {
     color: 'white'
 };
 
-// Invaders
+// Invaders -  Added invaderSpeed and direction
 const invaders = [];
 const invaderRows = 5;
 const invaderCols = 10;
@@ -19,7 +19,8 @@ const invaderWidth = 40;
 const invaderHeight = 30;
 const invaderPadding = 10;
 const invaderOffsetTop = 50;
-const invaderOffsetLeft = 50;
+const invaderOffsetLeft = 30;
+let invaderSpeed = 0.5; // Initial invader movement speed
 let invaderDx = 0.5; // Initial invader movement speed
 
 for (let row = 0; row < invaderRows; row++) {
@@ -46,6 +47,7 @@ let leftPressed = false;
 let spacePressed = false;
 let score = 0;
 let gameOver = false;
+let gameStarted = false; // Add a flag to track game start
 
 // Event listeners
 document.addEventListener('keydown', keyDownHandler);
@@ -113,37 +115,29 @@ function updatePlayer() {
 }
 
 function updateInvaders() {
-    // Move invaders
+    // Move invaders horizontally
     invaders.forEach(invader => {
-        invader.x += invaderDx;
+        invader.x += invaderSpeed;
     });
 
     // Check for collisions with walls
-    let hitRightWall = false;
-    let hitLeftWall = false;
+    let rightmostInvader = invaders[invaders.length -1];
+    let leftmostInvader = invaders[0];
     invaders.forEach(invader => {
-        if (invader.x + invader.width > canvas.width) {
-            hitRightWall = true;
-        } else if (invader.x < 0) {
-            hitLeftWall = true;
-        }
+        if (rightmostInvader.x + rightmostInvader.width > canvas.width) invaderSpeed = -invaderSpeed;
+        if (leftmostInvader.x < 0) invaderSpeed = -invaderSpeed;
     });
 
-    if (hitRightWall) {
-        invaderDx = -invaderDx; // Reverse direction
-        invaders.forEach(invader => {
-            invader.y += invaderHeight / 2; // Move down
-        });
-    } else if (hitLeftWall) {
-        invaderDx = -invaderDx; // Reverse direction
-        invaders.forEach(invader => {
-            invader.y += invaderHeight / 2; // Move down
-        });
+    // Move invaders down if they hit the wall
+    if (invaderSpeed < 0 && leftmostInvader.x < 0 || invaderSpeed > 0 && rightmostInvader.x + rightmostInvader.width > canvas.width) {
+        invaders.forEach(invader => invader.y += invaderHeight);
+        invaderSpeed *= -1; // Reverse direction
     }
 
     // Check for collisions with player
     invaders.forEach(invader => {
         if (
+            !gameOver &&
             player.x < invader.x + invader.width &&
             player.x + player.width > invader.x &&
             player.y < invader.y + invader.height &&
@@ -152,6 +146,13 @@ function updateInvaders() {
             gameOver = true;
         }
     });
+
+    // Check if any invaders reached the bottom
+    if (invaders.some(invader => invader.y + invader.height > canvas.height)) {
+        gameOver = true;
+    }
+
+    if (invaders.length === 0) gameOver = true; //Win condition
 }
 
 function updateProjectiles() {
@@ -160,7 +161,7 @@ function updateProjectiles() {
         projectile.y -= projectileSpeed;
     });
 
-    // Remove projectiles that go off screen
+    // Remove projectiles that go off-screen
     projectiles = projectiles.filter(projectile => projectile.y > 0);
 
     // Check for collisions with invaders
@@ -175,11 +176,7 @@ function updateProjectiles() {
                 invaders.splice(index, 1); // Remove invader
                 projectiles.splice(projectiles.indexOf(projectile), 1); // Remove projectile
                 score++;
-
-                // Increase invader speed
-                if (invaders.length > 0) {
-                    invaderDx += 0.05 * Math.sign(invaderDx); // Increase speed in current direction
-                }
+                invaderSpeed += 0.05 * Math.sign(invaderSpeed); // Increase speed in current direction
             }
         });
     });
@@ -200,14 +197,15 @@ function createProjectile() {
 // Game loop
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-
     if (!gameOver) {
+        if (!gameStarted) { gameStarted = true; return; } // Prevent immediate game over
         drawPlayer();
         drawInvaders();
         drawProjectiles();
         drawScore();
 
         updatePlayer();
+        if (invaders.length > 0)
         updateInvaders();
         updateProjectiles();
         createProjectile();

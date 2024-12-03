@@ -1,3 +1,4 @@
+// AI Refactor the code to use classes for game objects (player, invaders, projectiles).
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -217,3 +218,4 @@ function gameLoop() {
 }
 
 gameLoop();
+// AI!

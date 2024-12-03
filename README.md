@@ -7,7 +7,7 @@ feat: make space invaders and publish it
 
 ---
 
-I tried that pull request:
+I tried that https://github.com/cline/cline/pull/851 pull request:
 
 > [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0827:streamGenerateContent?alt=sse: [429 Too Many Requests] Resource has been exhausted (e.g. check quota).
 

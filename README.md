@@ -3,3 +3,23 @@
 feat: make space invaders and publish it
 
 https://github.com/cline/cline/pull/851
+
+---
+
+I tried that pull request:
+
+> [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-exp-0827:streamGenerateContent?alt=sse: [429 Too Many Requests] Resource has been exhausted (e.g. check quota).
+
+can happen periodically.
+
+---
+
+I believe there's a quota of 2 requests per minute.
+
+---
+
+According to https://discuss.ai.google.dev/t/whats-the-rate-limit-for-the-experimental-models/38226
+
+> In your case (gemini-1.5-pro-exp-0827) Rate limits are 2 RPM, 32,000 TPM, 50 RPD.
+
+---

@@ -93,7 +93,16 @@ class Projectile {
 const projectiles = [];
 const projectileWidth = 5;
 const projectileHeight = 15;
-const projectileSpeed = 3;
+let projectileSpeed = 3;
+
+// AI: Add a new class for the power-up
+// AI: The power-up should increase the player's projectile speed for a limited time
+// AI: The power-up should be a randomly appearing rectangle
+// AI: When the player collides with the power-up, the projectile speed should increase
+// AI: The power-up effect should last for a limited time, e.g., 5 seconds
+// AI: Implement the necessary logic for the power-up to appear, be collected, and have its effect applied
+// AI: Ensure the power-up effect wears off after the specified duration
+// AI!
 
 // Game variables
 let rightPressed = false;
@@ -242,3 +251,6 @@ function gameLoop() {
 }
 
 gameLoop();
+// AI - Added AI logic
+// AI!
+

@@ -28,7 +28,7 @@ class Player {
 
 const player = new Player(canvas.width / 2 - 30, canvas.height - 60, 60, 30, 5, 'white');
 
-// Invaders -  Added invaderSpeed and direction
+// Invaders
 class Invader {
     constructor(x, y, width, height, color) {
         this.x = x;
@@ -56,8 +56,8 @@ const invaderHeight = 30;
 const invaderPadding = 10;
 const invaderOffsetTop = 50;
 const invaderOffsetLeft = 30;
-let invaderSpeed = 0.5; // Initial invader movement speed
-let invaderDx = 0.5; // Initial invader movement speed
+let invaderSpeed = 0.5;
+let invaderDx = 0.5;
 
 for (let row = 0; row < invaderRows; row++) {
     for (let col = 0; col < invaderCols; col++) {
@@ -95,14 +95,32 @@ const projectileWidth = 5;
 const projectileHeight = 15;
 let projectileSpeed = 3;
 
-// AI: Add a new class for the power-up
-// AI: The power-up should increase the player's projectile speed for a limited time
-// AI: The power-up should be a randomly appearing rectangle
-// AI: When the player collides with the power-up, the projectile speed should increase
-// AI: The power-up effect should last for a limited time, e.g., 5 seconds
-// AI: Implement the necessary logic for the power-up to appear, be collected, and have its effect applied
-// AI: Ensure the power-up effect wears off after the specified duration
-// AI!
+// Power-up
+class PowerUp {
+    constructor(x, y, width, height, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.active = true;
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+}
+
+let powerUp;
+let powerUpActive = false;
+let powerUpTimer;
+
+
+function generatePowerUp() {
+    powerUp = new PowerUp(Math.random() * (canvas.width - 20), 20, 20, 20, 'blue');
+    powerUpActive = true;
+}
 
 // Game variables
 let rightPressed = false;
@@ -110,7 +128,7 @@ let leftPressed = false;
 let spacePressed = false;
 let score = 0;
 let gameOver = false;
-let gameStarted = false; // Add a flag to track game start
+let gameStarted = false;
 
 // Event listeners
 document.addEventListener('keydown', keyDownHandler);
@@ -137,9 +155,6 @@ function keyUpHandler(e) {
 }
 
 // Draw functions
-
-
-
 function drawScore() {
     ctx.font = '20px Arial';
     ctx.fillStyle = 'white';
@@ -153,7 +168,6 @@ function drawGameOver() {
 }
 
 // Update functions
-
 function createProjectile() {
     if (spacePressed) {
         projectiles.push({
@@ -162,15 +176,18 @@ function createProjectile() {
             width: projectileWidth,
             height: projectileHeight
         });
-        spacePressed = false; // Prevent holding space to shoot continuously
+        spacePressed = false;
     }
 }
 
 // Game loop
 function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (!gameOver) {
-        if (!gameStarted) { gameStarted = true; return; } // Prevent immediate game over
+        if (!gameStarted) {
+            gameStarted = true;
+            return;
+        }
         player.draw();
         invaders.forEach(invader => invader.draw());
         projectiles.forEach(projectile => projectile.draw());
@@ -234,15 +251,36 @@ function gameLoop() {
                     projectile.y < invader.y + invader.height &&
                     projectile.y + projectile.height > invader.y
                 ) {
-                    invaders.splice(index, 1); // Remove invader
-                    projectiles.splice(projectiles.indexOf(projectile), 1); // Remove projectile
+                    invaders.splice(index, 1);
+                    projectiles.splice(projectiles.indexOf(projectile), 1);
                     score++;
-                    invaderSpeed += 0.05 * Math.sign(invaderSpeed); // Increase speed in current direction
+                    invaderSpeed += 0.05 * Math.sign(invaderSpeed);
                 }
             });
         });
 
         createProjectile();
+
+        // Power-up logic
+        if (powerUpActive) {
+            powerUp.draw();
+
+            if (
+                player.x < powerUp.x + powerUp.width &&
+                player.x + player.width > powerUp.x &&
+                player.y < powerUp.y + powerUp.height &&
+                player.y + player.height > powerUp.y
+            ) {
+                powerUpActive = false;
+                const originalSpeed = projectileSpeed;
+                projectileSpeed *= 2;
+                powerUpTimer = setTimeout(() => {
+                    projectileSpeed = originalSpeed;
+                }, 5000); // Power-up lasts for 5 seconds
+            }
+        } else if (!powerUpActive && Math.random() < 0.01) { // 1% chance of spawning
+            generatePowerUp();
+        }
 
         requestAnimationFrame(gameLoop);
     } else {
@@ -251,6 +289,3 @@ function gameLoop() {
 }
 
 gameLoop();
-// AI - Added AI logic
-// AI!
-

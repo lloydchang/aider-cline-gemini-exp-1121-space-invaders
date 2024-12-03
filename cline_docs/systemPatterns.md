@@ -9,8 +9,9 @@ The game will be implemented using a single HTML file (`index.html`) that includ
 - **Canvas Rendering:** The game will be rendered on an HTML5 canvas element.
 - **Game Loop:** A game loop will be used to continuously update the game state and redraw the canvas.
 - **Event Handling:** User input (keyboard events) will be handled to control the player's ship and shooting.
-- **Object-Oriented Programming:** JavaScript objects will be used to represent game entities like the player's ship, invaders, and projectiles.
-- **Collision Detection:** Collision detection algorithms will be implemented to determine when projectiles hit invaders or when invaders collide with the player's ship.
+- **Object-Oriented Programming:** JavaScript objects will be used to represent game entities like the player's ship, invaders, and projectiles.  Improved object management and collision detection logic have been implemented.
+- **Game State Management:**  The game state (e.g., score, game over) is now managed more effectively.
+- **Collision Detection:** Collision detection algorithms will be implemented to determine when projectiles hit invaders or when invaders collide with the player's ship.  Collision detection has been improved for accuracy and to handle game over conditions.
 
 ## Data Flow
 

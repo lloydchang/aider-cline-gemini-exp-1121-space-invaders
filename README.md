@@ -25,7 +25,7 @@ According to https://discuss.ai.google.dev/t/whats-the-rate-limit-for-the-experi
 
 ---
 
-I was able to use this pull request to make a basic space invader game, but it wasn't playable.
+I was able to use that https://github.com/cline/cline/pull/851 pull request to make a basic space invader game, but it wasn't playable.
 
 Its logic only seems to load the main page.
 

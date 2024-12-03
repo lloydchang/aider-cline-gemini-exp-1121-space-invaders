@@ -46,6 +46,7 @@ let rightPressed = false;
 let leftPressed = false;
 let spacePressed = false;
 let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
 let gameOver = false;
 let gameStarted = false; // Add a flag to track game start
 
@@ -103,6 +104,11 @@ function drawGameOver() {
     ctx.font = '40px Arial';
     ctx.fillStyle = 'red';
     ctx.fillText('GAME OVER', canvas.width / 2 - 120, canvas.height / 2);
+
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText('Score: ' + score, canvas.width / 2 - 60, canvas.height / 2 + 40);
+    ctx.fillText('High Score: ' + highScore, canvas.width / 2 - 80, canvas.height / 2 + 70);
 }
 
 // Update functions
@@ -213,6 +219,10 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
     } else {
         drawGameOver();
+
+        if (score > highScore) {
+            localStorage.setItem('highScore', score);
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 Always work in /Users/lloyd/github/cline-experiments directory
 
+when running git, use ';' instead of &amp;
+
 after writing to files, you must run git commands to stage and commit your changes with a message that summarizes your changes
 
 # Cline Custom Instructions

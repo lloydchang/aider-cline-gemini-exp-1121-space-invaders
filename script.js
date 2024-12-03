@@ -18,9 +18,9 @@ class Player {
     }
 
     update() {
-        if (rightPressed && this.x < canvas.width - this.width) {
+        if (rightPressed &amp;&amp; this.x < canvas.width - this.width) {
             this.x += this.dx;
-        } else if (leftPressed && this.x > 0) {
+        } else if (leftPressed &amp;&amp; this.x > 0) {
             this.x -= this.dx;
         }
     }
@@ -130,6 +130,13 @@ let score = 0;
 let gameOver = false;
 let gameStarted = false;
 
+// AI: Add a check to ensure canvas context is valid before proceeding.
+// AI: Add comprehensive error handling for all potential issues.
+// AI: Implement a more efficient collision detection algorithm.
+// AI: Optimize the game loop for better performance.
+// AI: Consider using a game engine or framework for better structure and maintainability.
+// AI!
+
 // Event listeners
 document.addEventListener('keydown', keyDownHandler);
 document.addEventListener('keyup', keyUpHandler);
@@ -204,12 +211,12 @@ function gameLoop() {
         let rightmostInvader = invaders[invaders.length - 1];
         let leftmostInvader = invaders[0];
 
-        if (rightmostInvader && rightmostInvader.x + rightmostInvader.width > canvas.width) {
+        if (rightmostInvader &amp;&amp; rightmostInvader.x + rightmostInvader.width > canvas.width) {
             invaderSpeed = -invaderSpeed;
             invaders.forEach(invader => invader.y += invaderHeight);
         }
 
-        if (leftmostInvader && leftmostInvader.x < 0) {
+        if (leftmostInvader &amp;&amp; leftmostInvader.x < 0) {
             invaderSpeed = -invaderSpeed;
             invaders.forEach(invader => invader.y += invaderHeight);
         }
@@ -217,10 +224,10 @@ function gameLoop() {
         // Check for collisions with player
         invaders.forEach(invader => {
             if (
-                !gameOver &&
-                player.x < invader.x + invader.width &&
-                player.x + player.width > invader.x &&
-                player.y < invader.y + invader.height &&
+                !gameOver &amp;&amp;
+                player.x < invader.x + invader.width &amp;&amp;
+                player.x + player.width > invader.x &amp;&amp;
+                player.y < invader.y + invader.height &amp;&amp;
                 player.y + player.height > invader.y
             ) {
                 gameOver = true;
@@ -246,9 +253,9 @@ function gameLoop() {
         projectiles.forEach(projectile => {
             invaders.forEach((invader, index) => {
                 if (
-                    projectile.x < invader.x + invader.width &&
-                    projectile.x + projectile.width > invader.x &&
-                    projectile.y < invader.y + invader.height &&
+                    projectile.x < invader.x + invader.width &amp;&amp;
+                    projectile.x + projectile.width > invader.x &amp;&amp;
+                    projectile.y < invader.y + invader.height &amp;&amp;
                     projectile.y + projectile.height > invader.y
                 ) {
                     invaders.splice(index, 1);
@@ -266,9 +273,9 @@ function gameLoop() {
             powerUp.draw();
 
             if (
-                player.x < powerUp.x + powerUp.width &&
-                player.x + player.width > powerUp.x &&
-                player.y < powerUp.y + powerUp.height &&
+                player.x < powerUp.x + powerUp.width &amp;&amp;
+                player.x + player.width > powerUp.x &amp;&amp;
+                player.y < powerUp.y + powerUp.height &amp;&amp;
                 player.y + player.height > powerUp.y
             ) {
                 powerUpActive = false;
@@ -278,7 +285,7 @@ function gameLoop() {
                     projectileSpeed = originalSpeed;
                 }, 5000); // Power-up lasts for 5 seconds
             }
-        } else if (!powerUpActive && Math.random() < 0.01) { // 1% chance of spawning
+        } else if (!powerUpActive &amp;&amp; Math.random() < 0.01) { // 1% chance of spawning
             generatePowerUp();
         }
 

@@ -1,4 +1,4 @@
-Relates to https://github.com/cline/cline/pull/851
+Relates to [added gemini exp 1121 to api.ts #851](https://github.com/cline/cline/pull/851) https://github.com/cline/cline/pull/851
 
 ---
 # cline-gemini-exp-1121-space-invaders

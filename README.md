@@ -23,3 +23,9 @@ According to https://discuss.ai.google.dev/t/whats-the-rate-limit-for-the-experi
 > In your case (gemini-1.5-pro-exp-0827) Rate limits are 2 RPM, 32,000 TPM, 50 RPD.
 
 ---
+
+I was able to use this pull request to make a basic space invader game, but it wasn't playable.
+
+Its logic only seems to load the main page.
+
+More iterations would be needed via additional Cline steps.
